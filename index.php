@@ -25,12 +25,21 @@ else{
 			unset($data->pos[$i]);
 		$i++;
 	}
-	
+		
 	require('../lib/inc.cfg.php');
 	$var_array = (array) $data;
 	$var_array['base'] = (array) $var_array['base'];
 	$var_array['pos'] = (array) $var_array['pos'];
 	$var_array['summ'] = (array) $var_array['summ'];
+	
+	// Blanko oder Briefpapier
+	if($_POST['dlvry-form'] == 'Blanko'){
+		$booBlanko = true; 
+		$docname = $prefix.($data->base->id + $offset).'_b.pdf';
+	} else {
+		$booBlanko = false;
+		$docname = $prefix.($data->base->id + $offset).'.pdf';
+	}
 	
 	// Get Config-Data out of the db
 	mysql_connect($db[0]['host'],$db[0]['user'],$db[0]['password']);
@@ -41,15 +50,24 @@ else{
 	while($row = mysql_fetch_object($result)){
 	  $cfg[$row->id] = $row->value;
 	}
+	
+	// Check wheter file already exists
+	if (file_exists($path_to_gsales.$cfg['dir_data'].$cfg['dir_documents'].$docname)){
+		if($_POST['dlvry-form'] == 'Blanko')
+			$docname = $prefix.($data->base->id + $offset).'_'.time().'_b.pdf';
+		else 
+			$docname = $prefix.($data->base->id + $offset).'_'.time().'.pdf';
+	}
+	
 	require('tpl/out_pdf/tpl.def_deliverynotice.php');
 	
 	// Save Delivery Notice to User-Documents
-	$query = "INSERT INTO documents SET user_id = '".$_COOKIE['UID']."', username = '".$_COOKIE['UNAME']."', created = '".date('Y-m-d H:i:s', time())."', sub = 'subcustomer', recordid = '".$data->base->customers_id."', original_filename = '".$prefix.($data->base->id + $offset).".pdf', file = '".$prefix.($data->base->id + $offset).".pdf', title = 'Lieferschein ".$prefix.($data->base->id + $offset)."', description = '".$label." ".$prefix.($data->base->id + $offset)." vom ".$_POST['date']."', public = '".$public."'";
+	$query = "INSERT INTO documents SET user_id = '".$_COOKIE['UID']."', username = '".$_COOKIE['UNAME']."', created = '".date('Y-m-d H:i:s', time())."', sub = 'subcustomer', recordid = '".$data->base->customers_id."', original_filename = '".$docname."', file = '".$docname."', title = 'Lieferschein ".$prefix.($data->base->id + $offset)."', description = '".$label." ".$prefix.($data->base->id + $offset)." vom ".$_POST['date']."', public = '".$public."'";
 	if(mysql_query($query)){
 		echo($label." ".$prefix.($data->base->id + $offset)." vom ".$_POST['date']." wurde erfolgreich erstellt.<br /><br />
 			Sie können diesen Dialog nun schließen.".
 			'<script type="text/javascript">
-				window.open(\'../index.php?p=file&loc='.$cfg['dir_documents'].$prefix.($data->base->id + $offset).'.pdf\');
+				window.open(\'../index.php?p=file&loc='.$cfg['dir_documents'].$docname.'\');
 			</script>');
 	}
 	else{

@@ -42,6 +42,10 @@ input[type="text"] {
           <th>Lieferdatum:</th>
           <td><input name="date" type="text" value="<?=date('d.m.Y', time());?>" /></td>
         </tr>
+        <tr>
+          <th>Form:</th>
+          <td><select name="dlvry-form"><option>Briefpapier</option><option<?=($blanko_by_default ? ' selected' : '');?>>Blanko</option></select></td>
+        </tr>
       </tbody>
     </table>
     <br class="clear">
