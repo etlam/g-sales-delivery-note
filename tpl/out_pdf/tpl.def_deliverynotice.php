@@ -570,10 +570,9 @@ if ($abschlusstext != ''){
 
 
 // PDF Datei schreiben
-/*
-if ($booBlanko) $pdf->Output($savetoblanko,'F');
-else  $pdf->Output($saveto,'F');*/
-print_R($pdf->Output());
+
+if ($booBlanko) $pdf->Output($path_to_gsales.$cfg['dir_data'].$cfg['dir_documents'].$prefix.($data->base->id + $offset).'_b.pdf','F');
+else  $pdf->Output($path_to_gsales.$cfg['dir_data'].$cfg['dir_documents'].$prefix.($data->base->id + $offset).'.pdf','F');
 
 // Reset für den nächsten Durchgang (blanko modus)
 

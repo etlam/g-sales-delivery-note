@@ -24,4 +24,9 @@ $einleitungstext = "Folgende Artikel wurden Ihnen ausgeliefert:";
 $abschlusstext = "Bei Fragen und Problemen zu dieser Lieferung melden Sie sich bitte.
 Vielen Dank für Ihr Vertrauen und auf weiterhin gute Zusammenarbeit.";
 
+// Lieferschein im Kundenfrontend unter Dokumente anzeigen?
+// 0 -> Nein
+// 1 -> Ja
+$public = 1;
+
 ?>
