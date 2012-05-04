@@ -32,4 +32,7 @@ $blanko_by_default = true;
 // 1 -> Ja
 $public = 1;
 
+// Lieferungsdatum automtaisch zur Rechnung hinzufügen
+$addDeliveryDate = true;
+
 ?>

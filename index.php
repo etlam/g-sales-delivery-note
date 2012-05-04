@@ -1,4 +1,18 @@
 <?php
+/*      
+                                +#W,
+                                  W,       MÜNSMEDIA GbR                  MÜNSMEDIA GbR
+                                  W:                                      c/o webvariants GbR
+    WWW              *WWWWW@#W*   W:       Dr.-Hermann-Fleck-Allee 3      Breiter Weg 232a
+    W+   ,WWWWW##W+  W@  W@ ,WW   W@       57299 Burbach                  39104 Magdeburg
+    W@   W@, W@ ,WW  W@  WW  .W   WW       
+    WW   W#  WW  +W  W@  *W   W.  @W       Tel. 02736 / 50 94 97 - 4      Tel. 0391 / 50 54 93 8 - 0
+    +W  ,W@  @W   W  @W   W,      +W       Fax  02736 / 50 94 97 - 5      Fax  0391 / 50 54 93 8 - 8
+     W   W@   W                  WWW
+     W,                                    http://muensmedia.de
+     WWW
+
+ */
 require('conf/config.php');
 
 ini_set("soap.wsdl_cache_enabled", "0");
@@ -60,6 +74,12 @@ else{
 	}
 	
 	require('tpl/out_pdf/tpl.def_deliverynotice.php');
+	
+	// Save delivery date to bill
+	if($addDeliveryDate){
+		$date = explode('.', $_POST['date']);
+		$arrResult = $client->updateInvoice($strAPIKey, $_GET['iid'], array('deliverydate' => $date['2'].'-'.$date['1'].'-'.$date['0']));
+	}
 	
 	// Save Delivery Notice to User-Documents
 	$query = "INSERT INTO documents SET user_id = '".$_COOKIE['UID']."', username = '".$_COOKIE['UNAME']."', created = '".date('Y-m-d H:i:s', time())."', sub = 'subcustomer', recordid = '".$data->base->customers_id."', original_filename = '".$docname."', file = '".$docname."', title = 'Lieferschein ".$prefix.($data->base->id + $offset)."', description = '".$label." ".$prefix.($data->base->id + $offset)." vom ".$_POST['date']."', public = '".$public."'";
